@@ -95,6 +95,8 @@ class Media extends REST_Controller {
 
         // Create media, only if upload successfully or there is no file.
         if (!$has_file || move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
+            chmod($uploadfile, '744');
+
             $data = $this->input->post();
             $media = array(
                 "id" => $uuid,
@@ -133,7 +135,7 @@ class Media extends REST_Controller {
 
     private function ensureDirExist($dir) {
         if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
+            mkdir($dir, 0755, true);
         }
     }
 }

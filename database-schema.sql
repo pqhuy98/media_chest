@@ -1,38 +1,41 @@
--- --------------------------------------------------------
--- Host:                         mariadb.vamk.fi
--- Server version:               10.4.12-MariaDB-1:10.4.12+maria~bionic - mariadb.org binary distribution
--- Server OS:                    debian-linux-gnu
--- HeidiSQL Version:             10.1.0.5464
--- --------------------------------------------------------
+# Dump of table media
+# ------------------------------------------------------------
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-
--- Dumping structure for table e1601124_gps_tracker.point
-CREATE TABLE IF NOT EXISTS `point` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `longitude` double NOT NULL,
-  `latitude` double NOT NULL,
+CREATE TABLE `media` (
+  `id` varchar(50) NOT NULL,
+  `file_name` varchar(50) NOT NULL,
+  `has_file` tinyint(4) NOT NULL,
+  `text_message` longtext NOT NULL,
   `username` varchar(50) NOT NULL DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `longitude` double DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `ip_address` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `created_at` (`created_at`),
   KEY `point-to-user` (`username`),
+  KEY `longitude` (`longitude`),
+  KEY `latitude` (`latitude`),
   CONSTRAINT `point-to-user` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Data exporting was unselected.
--- Dumping structure for table e1601124_gps_tracker.user
-CREATE TABLE IF NOT EXISTS `user` (
+
+
+# Dump of table user
+# ------------------------------------------------------------
+
+CREATE TABLE `user` (
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Data exporting was unselected.
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+
+
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
