@@ -1,1 +1,2 @@
-- Set chmod for upload folder
+- create "uploads" directory inside "./application/" directory by `mkdir ./uploads`
+- Set ownership of "uploads" folder by `chown -R _www:_www ./uploads`

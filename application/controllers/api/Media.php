@@ -11,6 +11,7 @@ class Media extends REST_Controller {
         $this->load->database();
         $this->load->model('user_model');
         $this->load->model('media_model');
+        $this->load->helper('download');
     }
 
     // Get the BASIC username and password of the request, then check if they are correct.
@@ -86,7 +87,7 @@ class Media extends REST_Controller {
         $has_file = false;
         if (isset($_FILES['file'])) {
             $has_file = true;
-            $file_name = underscore($_FILES['file']['name']);
+            $file_name = $this->security->sanitize_filename($_FILES['file']['name']);
         }
         $uploadfile = $uploaddir.$uuid."_".$file_name;
 
@@ -95,7 +96,9 @@ class Media extends REST_Controller {
 
         // Create media, only if upload successfully or there is no file.
         if (!$has_file || move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
-            chmod($uploadfile, '744');
+            if ($has_file) {
+                chmod($uploadfile, 0755);
+            }
 
             $data = $this->input->post();
             $media = array(
@@ -124,13 +127,39 @@ class Media extends REST_Controller {
 
     // Controller method for "GET /coordinate".
     // Get distinct longitude and latitude.
-    public function coordinates_get() {
+    public function index_get() {
         // Authentication check
         $username = $this->checkCredential();
         if ($username === NULL) {
             $this->response(array("status" => "Unauthorized"), REST_Controller::HTTP_UNAUTHORIZED);
             return;
         }
+        $conditions = array(
+            "phrase" => $this->input->get('phrase', TRUE),
+            "lat_lower" => floatval($this->input->get('lat_lower', TRUE)),
+            "lat_upper" => floatval($this->input->get('lat_upper', TRUE)),
+            "long_lower" => floatval($this->input->get('long_lower', TRUE)),
+            "long_upper" => floatval($this->input->get('long_upper', TRUE)),
+            "time_lower" => $this->input->get('time_lower', TRUE),
+            "time_upper" => $this->input->get('time_upper', TRUE)
+        );
+        $data = $this->media_model->search($conditions);
+
+        if ($data === NULL) { // no data
+            $this->response(array(), REST_Controller::HTTP_OK);
+        } else { // some data
+            $this->response($data, REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function file_get($id) {
+        $media =  $this->media_model->get($id);
+        $filename = $media["id"]."_".$media["file_name"];
+
+        $data = file_get_contents("./uploads/media/".$filename);
+        $name = $media["username"]."_".$media["file_name"];
+
+        force_download($name, $data);
     }
 
     private function ensureDirExist($dir) {
@@ -138,4 +167,8 @@ class Media extends REST_Controller {
             mkdir($dir, 0755, true);
         }
     }
+}
+
+function get($arr, $key) {
+    return (isset($arr[$key]) && $arr[$key] != "") ? $arr[$key] : NULL;
 }

@@ -1,3 +1,4 @@
+uploads/media/*
 .env
 apllication/.env
 .DS_Store
