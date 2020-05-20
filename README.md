@@ -51,7 +51,7 @@ Model-View-Controller architecture is employed in the whole project. This backen
 
 ### Model
 Model Diagram:  
-![Model Diagram](https://raw.githubusercontent.com/pqhuy98/media_chest/master/model-diagram.PNG)
+![Model Diagram](https://raw.githubusercontent.com/pqhuy98/media_chest/master/model-diagram.png)
 
 The model component contains two classes: User and Point.  
 - Class User is a pair of (username, password) and is used for authentication and authorization in the REST API.  
