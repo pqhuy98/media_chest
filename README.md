@@ -53,7 +53,7 @@ Model-View-Controller architecture is employed in the whole project. This backen
 Model Diagram:  
 ![Model Diagram](https://raw.githubusercontent.com/pqhuy98/media_chest/master/model-diagram.png)
 
-The model component contains two classes: User and Point.  
+The model component contains two classes: User and Media.  
 - Class User is a pair of (username, password) and is used for authentication and authorization in the REST API.  
 - Class Media contains the post submission, i.e. id, filename, text message, owner's username, longitude and latitude, IP address and timestamp.
 
