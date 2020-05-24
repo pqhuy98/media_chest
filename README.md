@@ -26,9 +26,8 @@ not require signing up and logging and the other version requires signing up and
 ## Installation  
 ### Build from source
 1. Clone project and put it in PHP's web folder `www` (or `public_html` for VAMK server).
-2. In the project folder, run command line `composer install`.
-3. Create a MySQL database. Create tables using this [database schema](https://github.com/pqhuy98/media_chest/blob/master/database-schema.sql).
-4. Create an `.env` file inside the folder `[project_path]/application` with following content (you will need to change their values):
+2. Create a MySQL database. Create tables using this [database schema](https://github.com/pqhuy98/media_chest/blob/master/database-schema.sql).
+3. Create an `.env` file inside the folder `[project_path]/application` with following content (you will need to change their values):
 ```
 DB_HOST="your database host, e.g. mysql.cc.puv.fi"
 DB_USERNAME="your username, e.g. admin"
@@ -38,12 +37,12 @@ DB_DATABASE="your database name, e.g. media_chest"
 AUTHENTICATION=true   # whether the application performs password check or not (teacher's requirement).
 ERROR_REPORTING=false # if true, PHP's error message will thrown, else otherwise. Set it to false in production.
 ```
-5. Create "uploads" directory inside "./application/" directory and set permission:
+4. Create "uploads" directory inside "./application/" directory and set permission:
 ```
 mkdir ./uploads`
 chown -R www-data:www-data ./uploads # `www-data` is the Apache2 PHP script's user of VAMK's server. Might be different on other systems.
 ```
-6. Now the REST server should be functioning on `localhost/media_chest/api/...`. See Swagger documentation below for API specification.
+5. Now the REST server should be functioning on `localhost/media_chest/api/...`. See Swagger documentation below for API specification.
 
 ## Architecture
 Model-View-Controller architecture is employed in the whole project. This backend repository implements Model and Controller component, while the frontend Android client app implements the View component.
