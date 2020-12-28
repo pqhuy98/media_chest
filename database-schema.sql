@@ -2,14 +2,14 @@
 # ------------------------------------------------------------
 
 CREATE TABLE `media` (
-  `id` varchar(50) NOT NULL,
-  `file_name` varchar(50) NOT NULL,
+  `id` varchar(255) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
   `has_file` tinyint(4) NOT NULL,
   `text_message` longtext NOT NULL,
-  `username` varchar(50) NOT NULL DEFAULT '0',
+  `username` varchar(255) NOT NULL DEFAULT '0',
   `longitude` double DEFAULT NULL,
   `latitude` double DEFAULT NULL,
-  `ip_address` varchar(50) NOT NULL,
+  `ip_address` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `created_at` (`created_at`),
@@ -25,7 +25,7 @@ CREATE TABLE `media` (
 # ------------------------------------------------------------
 
 CREATE TABLE `user` (
-  `username` varchar(50) NOT NULL,
+  `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
