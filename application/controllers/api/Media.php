@@ -152,6 +152,10 @@ class Media extends REST_Controller {
         }
     }
 
+    public function config_get() {
+        var_dump(ini_get("upload_max_filesize"));
+    }
+
     public function file_get($id) {
         $media =  $this->media_model->get($id);
         $filename = $media["id"]."_".$media["file_name"];

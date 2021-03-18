@@ -51,22 +51,23 @@ source ./database-config.vamk.sh
 
 ### Build from source
 1. Clone project and put it in PHP's web folder `www` (or `public_html` for VAMK server).
-2. Create an `.env` file inside the folder `[project_path]/application` with following content (you will need to change their values):
-```
-DB_HOST="your database host, e.g. mysql.cc.puv.fi"
-DB_USERNAME="your username, e.g. admin"
-DB_PASSWORD="your password, e.g. password123"
-DB_DATABASE="your database name, e.g. media_chest"
-
-AUTHENTICATION=true   # whether the application performs password check or not (teacher's requirement).
-ERROR_REPORTING=false # if true, PHP's error message will thrown, else otherwise. Set it to false in production.
-```
-3. Create "uploads" directory inside "./application/" directory and set permission:
+2. Create "uploads" directory inside "./application/" directory and set permission:
 ```
 mkdir ./uploads`
 chown -R www-data:www-data ./uploads # `www-data` is the Apache2 PHP script's user of VAMK's server. Might be different on other systems.
 ```
-4. Now the REST server should be functioning on `localhost/media_chest/api/...`. See Swagger documentation below for API specification.
+3. Create an `.env` file inside the folder `[project_path]/application` with following content (you will need to change their values):
+```
+# This is the configuration file in which initial settings are defined and used by the application.
+# Do not change the content of this file if you are not sure what you are doing.
+
+PRIVATE_KEY="..."
+
+AUTHENTICATION=true   # whether the application performs password check or not (teacher's requirement).
+ERROR_REPORTING=false # if true, PHP's error message will thrown, else otherwise. Set it to false in production.
+```
+4. The value of `PRIVATE_KEY` must be generated with the method described in [this section](https://github.com/pqhuy98/media_chest#private_key-generation).
+5. After having a valid PRIVATE_KEY, the REST server should be functioning on `localhost/media_chest/api/...`. See Swagger documentation below for API specification.
 
 ## REST API Documentation
 [Documentation of REST API](https://app.swaggerhub.com/apis-docs/pqhuy98/Media-Chest/1.0.0#/Media).
@@ -116,3 +117,38 @@ Source code files to be concerned:
   application/controller/api/User.php
   application/controller/api/Media.php
 ```
+
+## Database Credentials Retrieval
+Database credentials is stored in the .env file. However, instead of storing host name, username, password and database name in plaintext,they are stored in a single symmetrically encrypted string in the .env file. To retrieve back the plaintext information, the string is then decrypted using a passphrase that is also hidden in the .env file. The symmetric encryption algorithm to be used in this project is a combination AES-256 and HMAC. This section describes the scheme to encrypt and decrypt the database credentials from the .env file.
+
+Example of the .env file:
+```
+# This is the configuration file in which initial settings are defined and used by the application.
+# Do not change the content of this file if you are not sure what you are doing.
+
+PRIVATE_KEY="14164260f9816ad5c652c056f..."
+```
+
+The value of PRIVATE_KEY is the encrypted string that contains database credentials. The passphrase to decrypt PRIVATE_KEY is derived from first 8 character of PRIVATE_KEY and the .env file's first two lines (**# This is the configuration...** and **# Do not change...**).
+
+Firstly, we split the PRIVATE_KEY string into 2 parts: the first part contains first 8 character, the second part contains the rest of the string. Using the example of .env file above, we have:
+
+PRIVATE_KEY string is `14164260f9816ad5c652c056f...`  
+First part is `14164260`  
+Second part is `f9816ad5c652c056f...`  
+
+Next, we split first part `14164260` into 4 pairs of consecutive numbers: `14`, `16`, `42` and `60`, Let's call them `a`, `b`, `c` and `d`.
+
+Next, we take the substring of the .env file's first line from position `a` to position `c` (i.e. from postion 14 to 42):  
+First line: `# This is the configuration file in which initial settings are defined and used by the application.`
+Substring from position 14 to 42 : `configuration file in which `.
+
+Next, we take the substring of the .env file's second line from position `b` to position `d` (i.e. from postion 16 to 60):  
+First line: `# Do not change the content of this file if you are not sure what you are doing.`
+Substring from position 16 to 60 : `the content of this file if you are not sure`.
+
+Now we concatenate the two substring to get the passphrase: `configuration file in which the content of this file if you are not sure`. We use this phase phrase to decrypt the PRIVATE_KEY's second part `f9816ad5c652c056f...` with the encryption algorithn to retrieve the database credentials `mysql.vamk.fi:e123456:password:database_name` (the host name, username, password and database name is concatenated by character `:`).
+
+Implementation of the scheme can be found in [this part of the source code](https://github.com/pqhuy98/media_chest/blob/master/application/config/database.php#L79).
+
+The encryption and decryption algorithm is a combination of AES-256 and HMAC which is originated from [here](https://stackoverflow.com/a/46872528).

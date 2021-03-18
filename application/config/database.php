@@ -109,18 +109,24 @@ if (getenv("ERROR_REPORTING") === "false") {
     $db['default']['db_debug'] = FALSE;
 }
 
-// Secret obfuscation, encryption and decryption
-
+// Secret obfuscation, encryption and decryption functions
 function getDatabaseCredential() {
     $lines = getFirstLines(2);
+
     $key = getenv('PRIVATE_KEY');
-    $start = array((int)substr($key, 0, 2), (int)substr($key, 2, 2));
-    $end = array((int)substr($key, 4, 2), (int)substr($key, 6, 2));
+    $cipher = substr($key, 8);
 
-    $key = substr($key, 8);
-    $pass = substr($lines[0], $start[0], $end[0] - $start[0]) . substr($lines[1], $start[1], $end[1] - $start[1]);
+    $a = (int)substr($key, 0, 2);
+    $b = (int)substr($key, 2, 2);
+    $c = (int)substr($key, 4, 2);
+    $d = (int)substr($key, 6, 2);
+    $pass = getPassphrase($lines, $a, $b, $c, $d);
 
-    return explode(":", AES256_decrypt(hex2bin($key), $pass));
+    return explode(":", AES256_decrypt(hex2bin($cipher), $pass));
+}
+
+function getPassphrase($lines, $a, $b, $c, $d) {
+    return substr($lines[0], $a, $c - $a) . substr($lines[1], $b, $d - $b);
 }
 
 function getFirstLines($number) {
@@ -163,7 +169,12 @@ function AES256_decrypt($ivHashCiphertext, $password) {
 }
 
 // Function to make private key.
-function makePrivateKey($host, $username, $password, $database, $pass) {
+function makePrivateKey($host, $username, $password, $database, $a, $b, $c, $d) {
+    $lines = getFirstLines(2);
+    $pass = getPassphrase($lines, $a, $b, $c, $d);
+
     $plaintext = join(":", array($host, $username, $password, $database));
-    return bin2hex(AES256_encrypt($plaintext, $pass));
+    $pk = $a . $b . $c . $d . bin2hex(AES256_encrypt($plaintext, $pass));
+
+    file_put_contents("private_key.txt", $pk);
 }
