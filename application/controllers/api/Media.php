@@ -97,7 +97,7 @@ class Media extends REST_Controller {
         // Create media, only if upload successfully or there is no file.
         if (!$has_file || move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
             if ($has_file) {
-                chmod($uploadfile, 0755);
+                chmod($uploadfile, 0777);
             }
 
             $data = $this->input->post();
