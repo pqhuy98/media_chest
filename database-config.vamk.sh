@@ -10,7 +10,7 @@ read -p 'Username [e1601124]: ' username
 username=${username:-e1601124}
 read -sp 'Password: ' password
 echo
-read -p "Database name [$username""_gps_tracker]: " dbName
+read -p "Database name [$username""_media_chest]: " dbName
 dbName=${dbName:-"$username""_media_chest"}
 
 startCap=35

@@ -34,7 +34,8 @@ rm -rf media_chest
 git clone https://github.com/pqhuy98/media_chest
 cd media_chest
 
-mkdir ./uploads`
+mkdir ./uploads
+chmod 777 ./uploads
 chown -R www-data:www-data ./uploads
 
 echo "# This is the configuration file in which initial settings are defined and used by the application.
@@ -54,6 +55,7 @@ source ./database-config.vamk.sh
 2. Create "uploads" directory inside "./application/" directory and set permission:
 ```
 mkdir ./uploads`
+chmod 777 ./uploads
 chown -R www-data:www-data ./uploads # `www-data` is the Apache2 PHP script's user of VAMK's server. Might be different on other systems.
 ```
 3. Create an `.env` file inside the folder `[project_path]/application` with following content (you will need to change their values):
