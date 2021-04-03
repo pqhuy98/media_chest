@@ -50,7 +50,7 @@ class Media_model extends CI_Model {
 
         if ($phrase != NULL) {
             $likeStr = "%".$this->db->escape_like_str($phrase)."%";
-            $WHERE .= " AND (text_message LIKE '".$likeStr."' OR file_name LIKE '".$likeStr."')";
+            $WHERE .= " AND (text_message LIKE '".$likeStr."' OR file_name LIKE '".$likeStr."' OR username LIKE '".$likeStr."')";
         }
 
         if ($ip_address != NULL) {
