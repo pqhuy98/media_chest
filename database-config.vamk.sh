@@ -6,8 +6,8 @@ PATH_PHP_CONFIG=./application/config/database.php
 
 read -p 'MySQL host [mysql.cc.puv.fi]: ' host
 host=${host:-mysql.cc.puv.fi}
-read -p "MySQL username [$USER]: " username
-username=${username:-$USER}
+read -p "MySQL username [e1601124]: " username
+username=${username:-e1601124}
 read -sp 'MySQL password: ' password
 echo
 read -p "Database name [$username""_media_chest]: " dbName
