@@ -1,14 +1,14 @@
 #!/bin/bash
-echo "Changing data base configuration"
+echo "Changing database configuration"
 PATH_DOTENV=./application/.env
 PATH_PRIVATE_KEY=private_key.txt
 PATH_PHP_CONFIG=./application/config/database.php
 
-read -p 'Host [mysql.cc.puv.fi]: ' host
+read -p 'MySQL host [mysql.cc.puv.fi]: ' host
 host=${host:-mysql.cc.puv.fi}
-read -p "Username [$USER]: " username
+read -p "MySQL username [$USER]: " username
 username=${username:-$USER}
-read -sp 'Password: ' password
+read -sp 'MySQL password: ' password
 echo
 read -p "Database name [$username""_media_chest]: " dbName
 dbName=${dbName:-"$username""_media_chest"}
