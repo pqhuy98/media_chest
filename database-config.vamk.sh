@@ -6,8 +6,8 @@ PATH_PHP_CONFIG=./application/config/database.php
 
 read -p 'Host [mysql.cc.puv.fi]: ' host
 host=${host:-mysql.cc.puv.fi}
-read -p 'Username [e1601124]: ' username
-username=${username:-e1601124}
+read -p 'Username [$USER]: ' username
+username=${username:-$USER}
 read -sp 'Password: ' password
 echo
 read -p "Database name [$username""_media_chest]: " dbName
@@ -30,8 +30,8 @@ makePrivateKey(\"$host\", \"$username\", \"$password\", \"$dbName\", $a, $b, $c,
 echo $cmd >> $PATH_PHP_CONFIG # add this line to be run when API is called
 
 # Make request to server to update
-curl -s http://localhost/~$username/media_chest/api/user > /dev/null
-curl -s https://www.cc.puv.fi/~$username/media_chest/api/user > /dev/null
+curl -s http://localhost/~$USER/media_chest/api/user > /dev/null
+curl -s https://www.cc.puv.fi/~$USER/media_chest/api/user > /dev/null
 
 # delete the last 2 lines created earlier
 sed -i '$d' $PATH_PHP_CONFIG
